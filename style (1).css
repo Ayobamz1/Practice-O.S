@@ -1,0 +1,293 @@
+/* =========================================================
+   FemiOS - style.css
+   The whole OS is powered by ONE trick: the "checkbox hack".
+   Read the comments top to bottom, they explain everything.
+   ========================================================= */
+
+/* ---------- 0. RESET ---------- */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body { font-family: "Segoe UI", system-ui, sans-serif; background: #000; }
+a { color: var(--accent); }
+
+/* ---------- 1. HIDE THE CHECKBOXES ----------
+   They still work (clicking a <label for="..."> toggles them),
+   we just move them off-screen so nobody sees them. */
+.state { position: absolute; left: -9999px; }
+
+/* ---------- 2. THEME COLORS (CSS variables) ----------
+   Change a variable here and the whole OS changes. */
+.os {
+  --accent: #4f46e5;
+  --win: rgba(255, 255, 255, 0.92);
+  --bar: rgba(255, 255, 255, 0.75);
+  --text: #111827;
+  --muted: #6b7280;
+  --panel: rgba(0, 0, 0, 0.05);
+  --code: #0f172a;
+  --wall1: #6366f1;
+  --wall2: #06b6d4;
+  --wall3: #ec4899;
+  color: var(--text);
+}
+/* Dark mode: when #chk-theme is ticked, override the variables */
+#chk-theme:checked ~ .os {
+  --accent: #818cf8;
+  --win: rgba(17, 24, 39, 0.92);
+  --bar: rgba(17, 24, 39, 0.8);
+  --text: #f3f4f6;
+  --muted: #9ca3af;
+  --panel: rgba(255, 255, 255, 0.08);
+  --wall1: #1e1b4b;
+  --wall2: #0f172a;
+  --wall3: #581c87;
+}
+
+/* ---------- 3. DESKTOP + WALLPAPER ---------- */
+.desktop {
+  position: fixed;
+  inset: 0 0 48px 0; /* leave room for the taskbar */
+  background:
+    radial-gradient(circle at 20% 20%, var(--wall3), transparent 45%),
+    radial-gradient(circle at 80% 70%, var(--wall2), transparent 50%),
+    linear-gradient(135deg, var(--wall1), var(--wall2));
+  transition: background 0.4s;
+}
+
+/* Desktop icons */
+.icons { display: flex; flex-direction: column; gap: 8px; padding: 12px; width: 100px; }
+.icon {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 8px 4px; border-radius: 10px; cursor: pointer;
+  color: #fff; font-size: 13px; text-align: center;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  user-select: none;
+}
+.icon span { font-size: 36px; }
+.icon:hover { background: rgba(255, 255, 255, 0.22); }
+
+/* ---------- 4. WINDOWS ----------
+   By default every window is hidden (display: none).
+   resize: both  -> gives a drag handle in the corner. CSS-only resizing! */
+.win {
+  position: absolute;
+  display: none;
+  flex-direction: column;
+  background: var(--win);
+  color: var(--text);
+  border-radius: 12px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(16px);
+  overflow: hidden;
+  resize: both;
+  min-width: 260px;
+  min-height: 160px;
+  z-index: 10;
+  animation: pop 0.18s ease-out;
+}
+@keyframes pop { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+/* Where each window starts and how big it is */
+.win-about    { top: 50px;  left: 140px; width: 400px; height: 300px; }
+.win-projects { top: 70px;  left: 200px; width: 680px; height: 430px; }
+.win-terminal { top: 120px; left: 260px; width: 460px; height: 280px; }
+.win-contact  { top: 90px;  left: 330px; width: 340px; height: 260px; }
+.win-settings { top: 140px; left: 380px; width: 340px; height: 230px; }
+
+/* THE CHECKBOX HACK:
+   "if the checkbox is ticked, then find the window after it and show it".
+   The ~ symbol means "a later sibling". That's why the checkboxes sit
+   before .os in the HTML. */
+#chk-about:checked    ~ .os .win-about,
+#chk-projects:checked ~ .os .win-projects,
+#chk-terminal:checked ~ .os .win-terminal,
+#chk-contact:checked  ~ .os .win-contact,
+#chk-settings:checked ~ .os .win-settings { display: flex; }
+
+/* Maximize the projects window */
+#chk-max-projects:checked ~ .os .win-projects {
+  inset: 0 !important;       /* !important beats the size set by resizing */
+  width: auto !important;
+  height: auto !important;
+  border-radius: 0;
+  resize: none;
+}
+
+/* Title bar */
+.titlebar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 10px 8px 14px;
+  background: var(--bar);
+  font-weight: 600; font-size: 14px;
+  user-select: none;
+}
+.controls { display: flex; gap: 6px; }
+.btn {
+  width: 28px; height: 24px; display: grid; place-items: center;
+  border-radius: 6px; cursor: pointer; font-size: 13px;
+}
+.btn:hover { background: var(--panel); }
+.btn.close:hover { background: #ef4444; color: #fff; }
+
+.win-body { flex: 1; overflow: auto; padding: 16px; }
+.win-body h2, .content h2 { margin-bottom: 10px; }
+.win-body p, .content p { margin-bottom: 10px; line-height: 1.5; }
+.muted { color: var(--muted); font-size: 13px; }
+
+/* ---------- 5. PROJECTS EXPLORER ---------- */
+.explorer { display: flex; flex: 1; min-height: 0; }
+.sidebar {
+  width: 190px; flex-shrink: 0; padding: 10px;
+  background: var(--panel);
+  display: flex; flex-direction: column; gap: 4px; overflow: auto;
+}
+.side-item { padding: 9px 10px; border-radius: 8px; cursor: pointer; font-size: 14px; }
+.side-item:hover { background: var(--panel); }
+.content { flex: 1; overflow: auto; padding: 18px; }
+
+/* Hide every project page, then show only the selected one */
+.proj { display: none; }
+#p0:checked ~ .content .proj-0,
+#p1:checked ~ .content .proj-1,
+#p2:checked ~ .content .proj-2,
+#p3:checked ~ .content .proj-3,
+#p4:checked ~ .content .proj-4 { display: block; animation: pop 0.2s ease-out; }
+
+/* Highlight the selected item in the sidebar */
+#p0:checked ~ .sidebar .side-0,
+#p1:checked ~ .sidebar .side-1,
+#p2:checked ~ .sidebar .side-2,
+#p3:checked ~ .sidebar .side-3,
+#p4:checked ~ .sidebar .side-4 { background: var(--accent); color: #fff; }
+
+/* Project cards on the overview page */
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin-top: 12px; }
+.card {
+  display: flex; flex-direction: column; gap: 4px; padding: 16px;
+  background: var(--panel); border-radius: 12px; cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.card span { font-size: 30px; }
+.card small { color: var(--muted); }
+.card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); }
+
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.tags span { background: var(--accent); color: #fff; padding: 3px 10px; border-radius: 99px; font-size: 12px; }
+.links { display: flex; gap: 16px; margin-top: 12px; }
+
+pre {
+  background: var(--code); color: #e2e8f0;
+  padding: 12px; border-radius: 8px; overflow: auto;
+  font: 12.5px/1.55 Consolas, "Courier New", monospace;
+}
+
+/* ---------- 6. TERMINAL ---------- */
+.term { background: #0b1020; color: #4ade80; }
+.term pre { background: none; padding: 0; color: inherit; }
+.theme-name::after { content: "Light"; }
+#chk-theme:checked ~ .os .theme-name::after { content: "Dark"; }
+.cursor { animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* ---------- 7. SETTINGS SWITCH ---------- */
+.row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; }
+.switch {
+  position: relative; width: 48px; height: 26px; border-radius: 99px;
+  background: #9ca3af; cursor: pointer; transition: background 0.2s;
+}
+.switch::after {
+  content: ""; position: absolute; top: 3px; left: 3px;
+  width: 20px; height: 20px; border-radius: 50%; background: #fff;
+  transition: transform 0.2s;
+}
+#chk-theme:checked ~ .os .switch { background: var(--accent); }
+#chk-theme:checked ~ .os .switch::after { transform: translateX(22px); }
+
+/* ---------- 8. TASKBAR ---------- */
+.taskbar {
+  position: fixed; left: 0; right: 0; bottom: 0; height: 48px; z-index: 50;
+  display: flex; align-items: center; gap: 6px; padding: 0 10px;
+  background: var(--bar); backdrop-filter: blur(18px);
+  color: var(--text);
+}
+.start-btn {
+  padding: 7px 14px; border-radius: 8px; cursor: pointer; font-weight: 600;
+  background: var(--accent); color: #fff;
+}
+.start-btn:hover { filter: brightness(1.1); }
+.tb-app {
+  width: 40px; height: 36px; display: grid; place-items: center;
+  border-radius: 8px; cursor: pointer; font-size: 20px; position: relative;
+}
+.tb-app:hover { background: var(--panel); }
+.spacer { flex: 1; }
+.tray { font-size: 13px; }
+
+/* Show a little line under taskbar icons of windows that are OPEN */
+#chk-about:checked    ~ .os .tb-about,
+#chk-projects:checked ~ .os .tb-projects,
+#chk-terminal:checked ~ .os .tb-terminal,
+#chk-contact:checked  ~ .os .tb-contact,
+#chk-settings:checked ~ .os .tb-settings { background: var(--panel); }
+#chk-about:checked    ~ .os .tb-about::after,
+#chk-projects:checked ~ .os .tb-projects::after,
+#chk-terminal:checked ~ .os .tb-terminal::after,
+#chk-contact:checked  ~ .os .tb-contact::after,
+#chk-settings:checked ~ .os .tb-settings::after {
+  content: ""; position: absolute; bottom: 2px; width: 16px; height: 3px;
+  border-radius: 3px; background: var(--accent);
+}
+
+/* ---------- 9. START MENU ---------- */
+.start-menu {
+  position: fixed; left: 8px; bottom: 56px; width: 260px; z-index: 60;
+  display: none; flex-direction: column; gap: 2px; padding: 12px;
+  background: var(--win); backdrop-filter: blur(18px);
+  border-radius: 14px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+  color: var(--text);
+  animation: pop 0.15s ease-out;
+}
+.start-menu h3 { padding: 4px 10px 10px; }
+.menu-item { padding: 10px; border-radius: 8px; cursor: pointer; }
+.menu-item:hover { background: var(--accent); color: #fff; }
+.menu-item.power { margin-top: 6px; border-top: 1px solid var(--panel); }
+.start-overlay { position: fixed; inset: 0 0 48px 0; z-index: 55; display: none; }
+#chk-start:checked ~ .os .start-menu { display: flex; }
+#chk-start:checked ~ .os .start-overlay { display: block; }
+
+/* ---------- 10. POWER OFF ---------- */
+.off {
+  position: fixed; inset: 0; z-index: 900; display: none;
+  place-items: center; background: #000; color: #9ca3af; cursor: pointer;
+}
+#chk-off:checked ~ .os .off { display: grid; }
+
+/* ---------- 11. BOOT SCREEN ----------
+   An animation that lasts 3.2s. At the end it becomes invisible
+   (visibility: hidden) so you can click the desktop beneath it. */
+.boot {
+  position: fixed; inset: 0; z-index: 1000; background: #000; color: #fff;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px;
+  animation: boot-out 3.2s forwards;
+}
+.boot-logo { font-size: 44px; font-weight: 700; letter-spacing: 2px; }
+.boot p { color: #9ca3af; font-size: 13px; }
+.boot-bar { width: 220px; height: 6px; background: #222; border-radius: 6px; overflow: hidden; }
+.boot-bar span { display: block; height: 100%; background: #818cf8; animation: load 2.4s ease-in-out forwards; }
+@keyframes load { from { width: 0; } to { width: 100%; } }
+@keyframes boot-out {
+  0%, 80% { opacity: 1; visibility: visible; }
+  100%    { opacity: 0; visibility: hidden; }
+}
+
+/* ---------- 12. MOBILE ----------
+   On small screens, windows fill the whole screen. */
+@media (max-width: 700px) {
+  .win {
+    inset: 0 !important; width: auto !important; height: auto !important;
+    border-radius: 0; resize: none;
+  }
+  .sidebar { width: 120px; }
+  .side-item { font-size: 12px; padding: 8px 6px; }
+  .tray { display: none; }
+}

@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FemiOS</title>
+    <link rel="stylesheet" href="style (1).css" />
+  </head>
+  <body>
+    <!-- =====================================================
+       1. THE "MEMORY" OF THE OS
+       Each hidden checkbox remembers one thing:
+       "is this window open?", "is dark mode on?", etc.
+       They MUST come before .os so CSS can use the ~ selector.
+       ===================================================== -->
+    <input type="checkbox" id="chk-start" class="state" />
+    <input type="checkbox" id="chk-about" class="state" />
+    <input type="checkbox" id="chk-projects" class="state" />
+    <input type="checkbox" id="chk-terminal" class="state" />
+    <input type="checkbox" id="chk-contact" class="state" />
+    <input type="checkbox" id="chk-settings" class="state" />
+    <input type="checkbox" id="chk-theme" class="state" />
+    <input type="checkbox" id="chk-max-projects" class="state" />
+    <input type="checkbox" id="chk-off" class="state" />
+
+    <div class="os">
+      <!-- =====================================================
+         2. BOOT SCREEN (pure CSS animation, fades out by itself)
+         ===================================================== -->
+      <div class="boot">
+        <div class="boot-logo">FemiOS</div>
+        <div class="boot-bar"><span></span></div>
+        <p>Starting up... no JavaScript needed</p>
+      </div>
+
+      <!-- POWER OFF SCREEN -->
+      <label for="chk-off" class="off"
+        >⏻ &nbsp;System is off. Click anywhere to power on.</label
+      >
+
+      <!-- =====================================================
+         3. DESKTOP: icons + windows
+         ===================================================== -->
+      <main class="desktop">
+        <!-- Desktop icons. A <label for="x"> toggles the checkbox with id="x" -->
+        <div class="icons">
+          <label for="chk-about" class="icon"><span>🧑‍💻</span>About Me</label>
+          <label for="chk-projects" class="icon"><span>📁</span>Projects</label>
+          <label for="chk-terminal" class="icon"><span>⌨️</span>Terminal</label>
+          <label for="chk-contact" class="icon"><span>✉️</span>Contact</label>
+          <label for="chk-settings" class="icon"><span>⚙️</span>Settings</label>
+        </div>
+
+        <!-- ================= ABOUT WINDOW ================= -->
+        <section class="win win-about" aria-label="About me">
+          <header class="titlebar">
+            <span>🧑‍💻 About Me</span>
+            <div class="controls">
+              <label for="chk-about" class="btn close" title="Close">✕</label>
+            </div>
+          </header>
+          <div class="win-body">
+            <h2>Hi, I'm Femi 👋</h2>
+            <p>
+              I just finished Level 1 at <strong>SQI College of ICT</strong>.
+              This whole operating system is built with
+              <strong>only HTML and CSS</strong> as my class project.
+            </p>
+            <p>Skills: HTML, CSS, learning more every day.</p>
+            <p class="muted">
+              Edit this text in index.html (search for "ABOUT WINDOW").
+            </p>
+          </div>
+        </section>
+
+        <!-- ================= PROJECTS WINDOW ================= -->
+        <section class="win win-projects" aria-label="Projects">
+          <header class="titlebar">
+            <span>📁 Projects</span>
+            <div class="controls">
+              <label for="chk-max-projects" class="btn" title="Maximize"
+                >▢</label
+              >
+              <label for="chk-projects" class="btn close" title="Close"
+                >✕</label
+              >
+            </div>
+          </header>
+
+          <div class="explorer">
+            <!-- Radio buttons = "which project is selected?" (only one at a time) -->
+            <input type="radio" name="proj" id="p0" class="state" checked />
+            <input type="radio" name="proj" id="p1" class="state" />
+            <input type="radio" name="proj" id="p2" class="state" />
+            <input type="radio" name="proj" id="p3" class="state" />
+            <input type="radio" name="proj" id="p4" class="state" />
+
+            <!-- Left sidebar: the project list -->
+            <aside class="sidebar">
+              <label for="p0" class="side-item side-0">🏠 All Projects</label>
+              <label for="p1" class="side-item side-1"
+                >🌐 Portfolio Website</label
+              >
+              <label for="p2" class="side-item side-2">🧮 Calculator App</label>
+              <label for="p3" class="side-item side-3">🛒 Landing Page</label>
+              <label for="p4" class="side-item side-4">💻 FemiOS</label>
+            </aside>
+
+            <!-- Right side: what shows depends on the selected radio -->
+            <div class="content">
+              <!-- OVERVIEW -->
+              <article class="proj proj-0">
+                <h2>My Projects</h2>
+                <p class="muted">
+                  Click a project to open it and see the code.
+                </p>
+                <div class="cards">
+                  <label for="p1" class="card"
+                    ><span>🌐</span><b>Portfolio Website</b
+                    ><small>HTML · CSS</small></label
+                  >
+                  <label for="p2" class="card"
+                    ><span>🧮</span><b>Calculator App</b
+                    ><small>HTML · CSS</small></label
+                  >
+                  <label for="p3" class="card"
+                    ><span>🛒</span><b>Landing Page</b
+                    ><small>HTML · CSS</small></label
+                  >
+                  <label for="p4" class="card"
+                    ><span>💻</span><b>FemiOS</b
+                    ><small>HTML · CSS</small></label
+                  >
+                </div>
+              </article>
+
+              <!-- PROJECT 1 : REPLACE WITH YOUR OWN -->
+              <article class="proj proj-1">
+                <h2>🌐 Portfolio Website</h2>
+                <p>A personal website that introduces me and shows my work.</p>
+                <div class="tags"><span>HTML</span><span>CSS</span></div>
+                <pre><code>&lt;section class="hero"&gt;
+  &lt;h1&gt;Hi, I'm Femi&lt;/h1&gt;
+  &lt;a href="#projects" class="btn"&gt;View my work&lt;/a&gt;
+&lt;/section&gt;</code></pre>
+                <p class="links">
+                  <a href="#" target="_blank" rel="noopener">🔗 Live demo</a>
+                  <a href="#" target="_blank" rel="noopener">📂 Source code</a>
+                </p>
+              </article>
+
+              <!-- PROJECT 2 -->
+              <article class="proj proj-2">
+                <h2>🧮 Calculator App</h2>
+                <p>A calculator layout with a button grid and hover effects.</p>
+                <div class="tags"><span>HTML</span><span>CSS Grid</span></div>
+                <pre><code>.keys {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.keys button:hover { transform: scale(1.05); }</code></pre>
+                <p class="links">
+                  <a href="#" target="_blank" rel="noopener">🔗 Live demo</a>
+                  <a href="#" target="_blank" rel="noopener">📂 Source code</a>
+                </p>
+              </article>
+
+              <!-- PROJECT 3 -->
+              <article class="proj proj-3">
+                <h2>🛒 Landing Page</h2>
+                <p>A responsive landing page for a small business.</p>
+                <div class="tags">
+                  <span>HTML</span><span>Responsive CSS</span>
+                </div>
+                <pre><code>.card {
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+}
+@media (max-width: 700px) {
+  .card { width: 100%; }
+}</code></pre>
+                <p class="links">
+                  <a href="#" target="_blank" rel="noopener">🔗 Live demo</a>
+                  <a href="#" target="_blank" rel="noopener">📂 Source code</a>
+                </p>
+              </article>
+
+              <!-- PROJECT 4 -->
+              <article class="proj proj-4">
+                <h2>💻 FemiOS</h2>
+                <p>
+                  This operating system! Windows open and close using the
+                  checkbox trick, with zero JavaScript.
+                </p>
+                <div class="tags">
+                  <span>HTML</span><span>CSS</span><span>Checkbox hack</span>
+                </div>
+                <pre><code>/* when the checkbox is ticked, show the window */
+#chk-about:checked ~ .os .win-about {
+  display: flex;
+}</code></pre>
+                <p class="links">
+                  <a href="#" target="_blank" rel="noopener">📂 Source code</a>
+                </p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= TERMINAL WINDOW ================= -->
+        <section class="win win-terminal" aria-label="Terminal">
+          <header class="titlebar">
+            <span>⌨️ Terminal</span>
+            <div class="controls">
+              <label for="chk-terminal" class="btn close" title="Close"
+                >✕</label
+              >
+            </div>
+          </header>
+          <div class="win-body term">
+            <pre>femi@femios:~$ neofetch
+  OS:      FemiOS 1.0
+  Host:    SQI College of ICT
+  Kernel:  HTML5 + CSS3
+  Shell:   no-JS-shell
+  Theme:   <span class="theme-name"></span>
+
+femi@femios:~$ <span class="cursor">▋</span></pre>
+          </div>
+        </section>
+
+        <!-- ================= CONTACT WINDOW ================= -->
+        <section class="win win-contact" aria-label="Contact">
+          <header class="titlebar">
+            <span>✉️ Contact</span>
+            <div class="controls">
+              <label for="chk-contact" class="btn close" title="Close">✕</label>
+            </div>
+          </header>
+          <div class="win-body">
+            <h2>Get in touch</h2>
+            <p>📧 <a href="mailto:you@example.com">you@example.com</a></p>
+            <p>
+              🐙
+              <a href="https://github.com/" target="_blank" rel="noopener"
+                >GitHub</a
+              >
+            </p>
+            <p>
+              💼
+              <a href="https://linkedin.com/" target="_blank" rel="noopener"
+                >LinkedIn</a
+              >
+            </p>
+            <p class="muted">Replace these with your real links.</p>
+          </div>
+        </section>
+
+        <!-- ================= SETTINGS WINDOW ================= -->
+        <section class="win win-settings" aria-label="Settings">
+          <header class="titlebar">
+            <span>⚙️ Settings</span>
+            <div class="controls">
+              <label for="chk-settings" class="btn close" title="Close"
+                >✕</label
+              >
+            </div>
+          </header>
+          <div class="win-body">
+            <h2>Appearance</h2>
+            <div class="row">
+              <span>Dark mode</span>
+              <label
+                for="chk-theme"
+                class="switch"
+                aria-label="Toggle dark mode"
+              ></label>
+            </div>
+            <p class="muted">This switch is a checkbox in disguise.</p>
+          </div>
+        </section>
+      </main>
+
+      <!-- Click anywhere outside the start menu to close it -->
+      <label for="chk-start" class="start-overlay"></label>
+
+      <!-- =====================================================
+         4. START MENU
+         ===================================================== -->
+      <section class="start-menu">
+        <h3>FemiOS</h3>
+        <label for="chk-about" class="menu-item">🧑‍💻 About Me</label>
+        <label for="chk-projects" class="menu-item">📁 Projects</label>
+        <label for="chk-terminal" class="menu-item">⌨️ Terminal</label>
+        <label for="chk-contact" class="menu-item">✉️ Contact</label>
+        <label for="chk-settings" class="menu-item">⚙️ Settings</label>
+        <label for="chk-theme" class="menu-item">🌓 Toggle dark mode</label>
+        <label for="chk-off" class="menu-item power">⏻ Shut down</label>
+      </section>
+
+      <!-- =====================================================
+         5. TASKBAR
+         ===================================================== -->
+      <nav class="taskbar">
+        <label for="chk-start" class="start-btn">⊞ Start</label>
+        <label for="chk-about" class="tb-app tb-about">🧑‍💻</label>
+        <label for="chk-projects" class="tb-app tb-projects">📁</label>
+        <label for="chk-terminal" class="tb-app tb-terminal">⌨️</label>
+        <label for="chk-contact" class="tb-app tb-contact">✉️</label>
+        <label for="chk-settings" class="tb-app tb-settings">⚙️</label>
+        <span class="spacer"></span>
+        <span class="tray">📶 🔋 FemiOS</span>
+      </nav>
+    </div>
+  </body>
+</html>
